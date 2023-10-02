@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://datacite.org/schema/kernel-4" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.2/metadata.xsd">
+  <identifier identifierType="${dc.identifier_type}">${dc.identifier}</identifier>
+  <creators>
+% for creator in dc.creators: 
+    <creator>
+      <creatorName nameType="${creator.nameType}">${creator.creatorName}</creatorName>
+    % if len(creator.givenName):
+      <givenName>${creator.givenName}</givenName>
+    % endif
+    % if len(creator.familyName):
+      <familyName>${creator.familyName}</familyName>
+    % endif
+    % if len(creator.pid):
+      <nameIdentifier schemeURI="${creator.schemeUri}" nameIdentifierScheme="${creator.nameIdentifierScheme}">${creator.pid}</nameIdentifier>
+    % endif
+    % if len(creator.affiliation):
+      <affiliation>${creator.affiliation}</affiliation>
+    % endif
+    </creator>
+% endfor
+  </creators>
+  <titles>
+% for title in dc.titles:
+% if len(title.titleType):
+    <title titleType="${title.titleType}">${title.title}</title>
+% else:
+    <title>${title.title}</title>
+% endif
+% endfor
+  </titles>
+  <publisher>${dc.publisher}</publisher>
+  <publicationYear>${dc.publicationYear}</publicationYear>
+  <subjects>
+% for subject in dc.subjects:
+% if len(subject.subjectScheme) and len(subject.valueURI) and len(subject.schemaURI):
+    <subject subjectScheme="${subject.subjectScheme}" schemeURI="${subject.schemaURI}" valueURI="${subject.valueURI}">${subject.subject}</subject>
+% elif len(subject.subjectScheme) and len(subject.schemaURI):
+    <subject subjectScheme="${subject.subjectScheme}" schemeURI="${subject.schemaURI}">${subject.subject}</subject>
+% elif  len(subject.subjectScheme):
+    <subject subjectScheme="${subject.subjectScheme}">${subject.subject}</subject>
+% else:
+    <subject>${subject.subject}</subject>
+% endif
+% endfor
+  </subjects>
+% if len(dc.contributors):
+  <contributors>
+% for contributor in dc.contributors:
+    <contributor contributorType="${contributor.contributorType}">
+      <contributorName nameType="${contributor.nameType}">${contributor.contributorName}</contributorName>
+    % if len(contributor.givenName):
+      <givenName>${contributor.givenName}</givenName>
+    % endif
+    % if len(contributor.familyName):
+      <familyName>${contributor.familyName}</familyName>
+    % endif
+    % if len(contributor.pid):
+      <nameIdentifier schemeURI="${contributor.schemeUri}" nameIdentifierScheme="${contributor.nameIdentifierScheme}">${contributor.pid}</nameIdentifier>
+    % endif
+    % if len(contributor.affiliation):
+      <affiliation>${contributor.affiliation}</affiliation>
+    % endif
+    </contributor>
+% endfor
+  </contributors>
+% endif
+% if len(dc.dates):
+  <dates>
+% for date in dc.dates: 
+    <date dateType="${date.dateType}">${date.date}</date>
+% endfor
+  </dates>
+% endif
+  <language>en</language>
+  <resourceType resourceTypeGeneral="Dataset">Digital</resourceType>
+% if len(dc.alternateIdentifiers):
+  <alternateIdentifiers>
+% for alternateIdentifier in dc.alternateIdentifiers:
+    <alternateIdentifier alternateIdentifierType="${alternateIdentifier.alternateIdentifierType}">${alternateIdentifier.alternateIdentifier}</alternateIdentifier>
+% endfor
+  </alternateIdentifiers>
+% endif
+% if len(dc.relations):
+  <relatedIdentifiers>
+% for relation in dc.relations:
+     <relatedIdentifier relatedIdentifierType="${relation.relatedIdentifierType}" relationType="${relation.relationType}">${relation.relatedIdentifier}</relatedIdentifier> 
+% endfor
+  </relatedIdentifiers>
+% endif
+% if len(dc.sizes):
+  <sizes>
+% for size in dc.sizes:
+    <size>${size.size} Bytes</size>
+% endfor
+  </sizes>
+% endif
+% if len(dc.formats):
+  <formats>
+% for format in dc.formats:
+    <format>${format.format}</format>
+% endfor
+  </formats>
+% endif
+% if len(dc.version):
+  <version>${dc.version}</version>
+% endif
+% if len(dc.rights):
+  <rightsList>
+% for right in dc.rights:
+% if len(right.rightsUri):
+     <rights schemeURI="https://spdx.org/licenses/" rightsIdentifierScheme="SPDX" rightsIdentifier="${right.rightsIdentifier}" rightsURI="${right.rightsUri}">${right.rights}</rights>
+% else:
+     <rights>${right.rights}</rights>
+% endif
+% endfor
+  </rightsList>
+% endif
+  <descriptions>
+% for description in dc.descriptions: 
+    <description descriptionType="${description.descriptionType}">${description.description}</description>
+% endfor
+  </descriptions>
+% if len(dc.geoLocations):
+  <geoLocations>
+% for geoLocation in dc.geoLocations:
+     <geoLocation>
+        <geoLocationPlace>${geoLocation.geoLocationPlace}</geoLocationPlace>
+        <geoLocationBox>
+            <westBoundLongitude>${geoLocation.westBoundLongitude}</westBoundLongitude>
+            <eastBoundLongitude>${geoLocation.eastBoundLongitude}</eastBoundLongitude>
+            <southBoundLatitude>${geoLocation.southBoundLatitude}</southBoundLatitude>
+            <northBoundLatitude>${geoLocation.northBoundLatitude}</northBoundLatitude>
+        </geoLocationBox>
+     </geoLocation>
+% endfor
+  </geoLocations>
+% endif
+% if len(dc.funders):
+  <fundingReferences>
+% for funder in dc.funders:
+      <fundingReference>
+          <funderName>${funder.funderName}</funderName>
+     % if len(funder.funderIdentifier):
+          <funderIdentifier funderIdentifierType="${funder.funderIdentifierType}">${funder.funderIdentifier}</funderIdentifier>
+     % endif
+     % if len(funder.awardNumber):
+          <awardNumber awardURI="${funder.awardURI}">${funder.awardNumber}</awardNumber>
+     % endif
+     % if len(funder.awardTitle):
+          <awardTitle>${funder.awardTitle}</awardTitle>
+     % endif
+      </fundingReference>
+% endfor
+  </fundingReferences>
+% endif
+</resource>

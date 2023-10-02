@@ -1,0 +1,13 @@
+{
+"sourcedir":"/pf/k/k204082/gitlab/citation_service/",
+"xmloutdir":"/pf/k/k204082/export/cmip6cite",
+"logdir":"/pf/k/k204082/logs_cmip6",
+"oaitargetdir":"/opt/dmoai/oai_data/xml_OpenAire_esgf",
+"oaitargetdirtest":"/opt/dmoai/oai_data/xml_OpenAire_wdcc_test",
+"addpaths":["/sw/rhel6-x64/python/python-2.7-ve0-gcc49/bin",
+"/home/dkrz/k204082/.local/lib/python2.7/site-packages",
+"/home/dkrz/k204082/.local/lib/python2.7/site-packages/esgf_pyclient-0.1.8-py2.7.egg",
+"/sw/rhel6-x64/python/python-2.7-ve0-gcc49/lib/python2.7" ],
+"nodes":["http://esgf-data.dkrz.de/esg-search","http://esgf-node.llnl.gov/esg-search","http://esgf-node.ipsl.upmc.fr/esg-search","https://esgf-index1.ceda.ac.uk/esg-search"],
+"nodestest":["http://esgf-fedtest.dkrz.de/esg-search","http://esgf-dev1.llnl.gov/esg-search","http://vesgint-idx.ipsl.upmc.fr/esg-search"]
+}

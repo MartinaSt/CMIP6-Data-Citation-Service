@@ -1,0 +1,2 @@
+DOI_ENTRY:select r.entry_id,lower(replace(c.access_spec,'doi:','')) as PID from cera2.citation c, cera2.reference r where r.ref_type_id=2000004 and r.citation_id=c.citation_id order by c.access_spec
+DOI_REF:select t.ref_type_acronym,lower(replace(c.access_spec,'doi:','')) as REF_PID,c.title,c.publisher from cera2.reference r, cera2.citation c,cera2.ref_type t where r.entry_id=${entryid} and r.citation_id=c.citation_id and r.ref_type_id != 2000004 and c.access_spec like 'doi%' and r.ref_type_id=t.ref_type_id
