@@ -9,6 +9,7 @@ Version: V0.1 2018-08-15, stockhause@dkrz.de"""
 # Usage: ./dli_access_pid.py <WDCC|ESGF> [<test|testdb|testdbtest>]
 
 import sys,os,re,httplib2
+import urllib
 import logging
 import json
 import datetime
@@ -20,14 +21,14 @@ except:
     print "Cannot import module cx_Oracle"
     sys.exit()
 
-# DOIs without type, which are papers
-paper_except = [
-    '10.1002','10.1007','10.1017','10.1016','10.1029','10.1038','10.1051','10.1073','10.1080','10.1088','10.1098','10.1101','10.1111','10.1126','10.1175','10.1289','10.1371',
-    '10.20944','10.21203','10.2139','10.2151','10.22541','10.2307','10.26686',
-    '10.31223','10.3389','10.3390',
-    '10.4324',
-    '10.5194'
-]
+## DOIs without type, which are papers
+#paper_except = [
+#    '10.1002','10.1007','10.1017','10.1016','10.1029','10.1038','10.1051','10.1073','10.1080','10.1088','10.1098','10.1101','10.1111','10.1126','10.1175','10.1289','10.1371',
+#    '10.20944','10.21203','10.2139','10.2151','10.22541','10.2307','10.26686',
+#    '10.31223','10.3389','10.3390',
+#    '10.4324',
+#    '10.5194'
+#]
 
 # set environment
 mydir=os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -75,6 +76,7 @@ crossref_api='https://api.crossref.org/works/doi/%s'
 #MS 2020-06-17:api v1->api v2
 #datacite_api='https://api.datacite.org/works/%s'
 datacite_api='https://api.datacite.org/dois/%s'
+idf_api='https://doi.org/ra/%s'
 h = httplib2.Http()
 request = 'GET'
 number = 0
@@ -238,6 +240,7 @@ for d in data:
 #dumlist=[{'PID': '10.5072/esgf/cmip6.1402', 'REFERENCES': [], 'EXTERNAL_PID_URL': 'http://cera-www.dkrz.de/WDCC/testmeta/CMIP6/CMIP6.CMIP.NOAA-GFDL.GFDL-CM4', 'POLICY_DRS_ID': '1402', 'ENTRY_NAME': 'CMIP6.CMIP.NOAA-GFDL.GFDL-CM4', 'ENTRY_ID': '1864'}]
 
 for d in dumlist:
+    #print d['PID']
     #TESTING 
     #break
 
@@ -403,7 +406,7 @@ number=0
 #newrefs = [{'doi': '10.1594/wdcc/hoaps3_daily', 'ref_type_acronym': u'isPreviousVersionOf', 'relatedobject_type': u'dataset', 'entry_id': '1864', 'access_spec': u'doi:10.5676/eum_saf_cm/hoaps/v001', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/hoaps3_monthly', 'ref_type_acronym': u'isPreviousVersionOf', 'relatedobject_type': u'dataset', 'entry_id': '1864', 'access_spec': u'doi:10.5676/eum_saf_cm/hoaps/v001', 'relatedobject_schema': u'datacite'}]
 #newrefs = [{'doi': '10.1594/wdcc/hoaps3_daily', 'ref_type_acronym': u'isPreviousVersionOf', 'relatedobject_type': u'dataset', 'entry_id': '2147311', 'access_spec': u'doi:10.5676/eum_saf_cm/hoaps/v001', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/hoaps3_monthly', 'ref_type_acronym': u'isPreviousVersionOf', 'relatedobject_type': u'dataset', 'entry_id': '2139553', 'access_spec': u'doi:10.5676/eum_saf_cm/hoaps/v001', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf12_eraint_ctrl', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519340', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf12_gfdlesm_hist', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519341', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf12_gfdlesm_rcp45', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519342', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf12_hadgem2_rcp45', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519344', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf12_mpiesm_hist', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519345', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf12_mpiesm_rcp45', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519346', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_eraint_ctrl', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519941', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_gfdlesm_hist', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519942', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_gfdlesm_rcp45', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519943', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_hadgem2_hist', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519944', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_hadgem2_rcp45', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519945', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_mpiesm_hist', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519946', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}, {'doi': '10.1594/wdcc/wrf60_mpiesm_rcp45', 'ref_type_acronym': u'isReferencedBy', 'relatedobject_type': u'dataset', 'entry_id': '3519947', 'access_spec': u'doi:10.1594/pangaea.880512', 'relatedobject_schema': u'datacite'}]
 #TEST
-#dumtargets={u'10.1594/pangaea.880512': {'publisher': u'PANGAEA - Data Publisher for Earth & Environmental Science', 'doi': u'10.1594/pangaea.880512', 'title': u'West African Science Service Centre on Climate Change and Adapted Land Use (WASCAL) high-resolution climate simulation data, links to subset of variables at daily and monthly temporal resolution in NetCDF format, supplement to: Heinzeller, Dominikus; Dieng, Diarra; Smiatek, Gerhard; Olusegun, Christiana F; Klein, Cornelia; Hamann, Ilse; Salack, Seyni; Kunstmann, Harald (submitted): The WASCAL high-resolution regional climate simulation ensemble for West Africa. Earth System Science Data Discussions', 'creators': 'Smiatek, Gerhard; Kunstmann, Harald; Dieng, Diarra; Heinzeller, Dominikus; Klein, Cornelia; Olusegun, Christiana F; Hamann, Ilse', 'type': u'dataset', 'schema': u'doi'}, u'10.5676/eum_saf_cm/hoaps/v001': {'publisher': u'Satellite Application Facility on Climate Monitoring (CM SAF)', 'doi': u'10.5676/eum_saf_cm/hoaps/v001', 'title': u'Monthly Means / 6-Hourly Composites', 'creators': 'Schr\xc3\xb6der, Marc; Bakan, Stephan; Andersson, Axel; Klepp, Christian-Phillip; Fennig, Karsten', 'type': u'dataset', 'schema': u'doi'}}
+#dumtargets={u'10.1594/pangaea.880512': {'publisher': u'PANGAEA - Data Publisher for Earth & Environmental Science', 'doi': u'10.1594/pangaea.880512', 'title': u'West African Science Service Centre on Climate Change and Adapted Land Use (WASCAL) high-resolution climate simulation data, links to subset of variables at daily and monthly temporal resolution in NetCDF format, supplement to: Heinzeller, Dominikus; Dieng, Diarra; Smiatek, Gerhard; Olusegun, Christiana F; Klein, Cornelia; Hamann, Ilse; Salack, Seyni; Kunstmann, Harald (submitted): The WASCAL high-resolution regional climate simulation ensemble for West Africa. Earth System Science Data Discussions', 'creators': 'Smiatek, Gerhard; Kunstmann, Harald; Dieng, Diarra; Heinzeller, Dominikus; Klein, Cornelia; Olusegun, Christiana F; Hamann, Ilse', 'type': u'dataset', 'schema': u'doi'}, u'10.1175/jcli-d-12-00623.1': {'publisher': u'Satellite Application Facility on Climate Monitoring (CM SAF)', 'doi': u'10.5676/eum_saf_cm/hoaps/v001', 'title': u'Monthly Means / 6-Hourly Composites', 'creators': 'Schr\xc3\xb6der, Marc; Bakan, Stephan; Andersson, Axel; Klepp, Christian-Phillip; Fennig, Karsten', 'type': u'dataset', 'schema': u'doi'}}
 
 for doi in dumtargets.keys():
     doi_prefix=re.split('/',doi)[0]
@@ -412,46 +415,56 @@ for doi in dumtargets.keys():
         continue
     number += 1
     #ep = crossref_api % '10.1175/jcli-d-12-00623.1'
-    if dumtargets[doi]['type'] == 'publication':
-        ep = crossref_api % doi
-    elif  dumtargets[doi]['type'] == 'dataset':
-        ep = datacite_api % doi
-    elif doi_prefix in paper_except: #re.search('10.5194',doi) or re.search('10.1175',doi) or re.search('10.26686',doi) or re.search('10.31223',doi) or re.search('10.1007',doi) or  re.search('10.2307',doi) or re.search('10.1038',doi) or re.search('10.1002',doi) or re.search('10.4324',doi):  # journal exemptions: GMD, BAMS, nature
-        ep = crossref_api % doi
-        dumtargets[doi]['type'] = 'publication'
-        #print 'EXCEPTION: DOI=%s,type=%s' % (doi,dumtargets[doi]['type'])
-    else:
-        ep = datacite_api % doi
+    #if dumtargets[doi]['type'] == 'publication':
+    #    ep = crossref_api % doi
+    #elif  dumtargets[doi]['type'] == 'dataset':
+    #    ep = datacite_api % doi
+    #elif doi_prefix in paper_except: #re.search('10.5194',doi) or re.search('10.1175',doi) or re.search('10.26686',doi) or re.search('10.31223',doi) or re.search('10.1007',doi) or  re.search('10.2307',doi) or re.search('10.1038',doi) or re.search('10.1002',doi) or re.search('10.4324',doi):  # journal exemptions: GMD, BAMS, nature
+    #    ep = crossref_api % doi
+    #    dumtargets[doi]['type'] = 'publication'
+    #    #print 'EXCEPTION: DOI=%s,type=%s' % (doi,dumtargets[doi]['type'])
+    #else:
+    #    ep = datacite_api % doi
+    #    dumtargets[doi]['type'] = 'dataset'
+    #    #continue
+
+    # check if Crossref or DataCite DOI
+    # SSL error with httplib access
+    ep = idf_api % doi
+    try:
+        js = json.loads(urllib.urlopen(ep).read())
+    except:
+        log.error('Error in reading from %s' % ep)
+        continue
+    if js[0]["RA"] == 'DataCite':
         dumtargets[doi]['type'] = 'dataset'
-        #continue
+        ep = datacite_api % doi
+    elif js[0]["RA"] == 'Crossref':
+        dumtargets[doi]['type'] = 'publication'
+        ep = crossref_api % doi
+    else:
+        log.error('Unknown DOI provider')
+        continue
+    #sys.exit()
+    
     log.info('citation: %s (%s)' % (doi,ep))
     print 'citation: %s (%s)' % (doi,ep)
     #print dumsql[doi]
-    response, content = h.request(ep,
-                                  request,
-                                  headers=header)
-    #print response
-    #print content.strip(),len(content)
-    if response.status == '404' or response['status'] == '404':
-        log.error(response.status)
-        #sqllines.append(dumtargets[doi])
-        continue
 
+    # SSL error -> replace httplib by urlopen
     try:
-        js = json.loads(content.decode('utf-8'))
+        js = json.loads(urllib.urlopen(ep).read().decode('utf-8'))
         sqllines.append(dumtargets[doi])
+        print js
     except:
         try:
-            js = json.loads(content)
+            js = json.loads(urllib.urlopen(ep).read())
             sqllines.append(dumtargets[doi])
+            print js
         except:
-            # log.error('Error in reading %s' % f)
-            log.error('JSON load: '+response.status)
+            log.error('Error in reading from %s' % ep)
             continue
-        
-    #print response.status
-    #print len(content)
-    #sys.exit()
+
     if len(content) == 3:
         log.debug('...no results for crossref api request (%s)' % doi)
         sqllines.append(dumtargets[doi])
