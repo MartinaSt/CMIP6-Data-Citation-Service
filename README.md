@@ -1,6 +1,7 @@
 # CMIP6 Data Citation Service
 
 Software for CMIP6 data citation service:
+* [database schema](db_schema.png)
 * **[registerDOI](/registerDOI)**: 
    * registerDOI.py: register DataCite metadata and DOI
    * checkDOI.py: check for DOIs without ESGF datasets
