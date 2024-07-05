@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 """ create updated DataCite metadata files and transfer to oai server
-Version: V0.8 2021-02-15: rsync changed
+Version: V0.9 2023-11-02: rsync change of target
+         V0.8 2021-02-15: rsync changed
          V0.7 2020-04-16: tcera1 -> testdb
          V0.6 2020-01-06: rsync k204082 -> citeuser (stockhause@dkrz.de),
          V0.5 2019-12-03: DB hardware/software exchange (stockhause@dkrz.de),
@@ -70,11 +71,12 @@ os.environ['LC_IDENTIFICATION']="en_US.UTF-8"
 os.environ['LC_ALL']="" 
 
 
-# check ssh connection to dm-oai
-rargs=['ssh','citeuser@dm-oai.dkrz.de','echo','\'Hallo\'']
+# check ssh connection to dmoai
+rargs=['ssh','citeuser@dmoai.cloud.dkrz.de','echo','\'Hallo\'']
+#rargs=['ssh','citeuser@dm-oai.dkrz.de','echo','\'Hallo\'']
 p = Popen( ' '.join(rargs), shell=True, stdout=PIPE, stderr=PIPE)
 if (len(p.stderr.readlines())>0 or p.stdout.read().strip() != 'Hallo'): 
-    print 'dm-oai unreachable'
+    print 'dmoai unreachable'
     sys.exit()
 
 
@@ -139,7 +141,8 @@ def oaiTransfer():
     #MS 2021-02-02/2021-02-15: bug fixed in rsync transfer
     #rargs = ["rsync","-av","--include","*.xml","-e","ssh","--remove-source-files"]
     rargs = ["rsync","-av","-e","ssh","--remove-source-files"]
-    mypaths = [outdir+"/*.xml","citeuser@dm-oai.dkrz.de:"+targetdir+"/"]
+    mypaths = [outdir+"/*.xml","citeuser@dmoai.cloud.dkrz.de:"+targetdir+"/"]
+    #mypaths = [outdir+"/*.xml","citeuser@dm-oai.dkrz.de:"+targetdir+"/"]
     #mypaths = [outdir+"/","citeuser@dm-oai.dkrz.de:"+targetdir+"/"]
     rargs.extend(mypaths)
     p = Popen( ' '.join(rargs), shell=True, stdout=PIPE, stderr=PIPE)

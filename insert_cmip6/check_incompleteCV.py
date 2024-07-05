@@ -2,6 +2,7 @@
 
 """ Check for ESGF data with incomplete CMIP6 registration in the CV for source_id, i.e. missing activity_participation for MIP (https://github.com/WCRP-CMIP/CMIP6_CVs)
 Version: 
+         V0.3 2024-07-04: ESGF Search API request changed from DKRZ to LLNL node after DKRZ's transition to ESGF2/metagrid, stockhause@dkrz.de
          V0.2 2020-05-08: revised ESGF Search API request based on recommendations from SA, stockhause@dkrz.de
          V0.1 2020-04-21, stockhause@dkrz.de"""
 
@@ -70,9 +71,10 @@ for root, dirs, files in os.walk(".", topdown=False):
 # 1. Access ESGF Search API
 #
 # a. list all models
-# MS (2020-05-08)
+# MS (2024-07-04))
 #esgf_api_models = 'https://esgf-data.dkrz.de/esg-search/search/?offset=0&limit=0&mip_era=CMIP6&activity_id!=input4MIPs&facets=source_id%2Cinstitution_id&fields=source_id&format=application%2Fsolr%2Bjson'
-esgf_api_models = 'https://esgf-data.dkrz.de/esg-search/search/?offset=0&limit=0&project=CMIP6&facets=source_id%2Cinstitution_id&fields=source_id&retracted=false&format=application%2Fsolr%2Bjson'
+#esgf_api_models = 'https://esgf-data.dkrz.de/esg-search/search/?offset=0&limit=0&project=CMIP6&facets=source_id%2Cinstitution_id&fields=source_id&retracted=false&format=application%2Fsolr%2Bjson'
+esgf_api_models = 'https://esgf-node.llnl.gov/esg-search/search/?offset=0&limit=0&project=CMIP6&facets=source_id%2Cinstitution_id&fields=source_id&retracted=false&format=application%2Fsolr%2Bjson'
 try:
     response = urllib2.urlopen(esgf_api_models)
     esgf_models = json.loads(response.read())
@@ -87,9 +89,10 @@ for m in esgf_models['facet_counts']['facet_fields']['source_id'][0::2]:
     i_nfound = []
     a_found = []
     a_nfound = []
-    #MS (2020-05-08)
+    #MS (2024-07-04)
     #esgf_api_mips = 'https://esgf-data.dkrz.de/esg-search/search/?offset=0&limit=0&mip_era=CMIP6&activity_id!=input4MIPs&source_id='+m+'&facets=source_id%2Cinstitution_id%2Cactivity_id&fields=activity_id&format=application%2Fsolr%2Bjson'
-    esgf_api_mips = 'https://esgf-data.dkrz.de/esg-search/search/?offset=0&limit=0&project=CMIP6&source_id='+m+'&facets=source_id%2Cinstitution_id%2Cactivity_drs&fields=activity_drs&retracted=false&format=application%2Fsolr%2Bjson'
+    #esgf_api_mips = 'https://esgf-data.dkrz.de/esg-search/search/?offset=0&limit=0&project=CMIP6&source_id='+m+'&facets=source_id%2Cinstitution_id%2Cactivity_drs&fields=activity_drs&retracted=false&format=application%2Fsolr%2Bjson'
+    esgf_api_mips = 'https://esgf-node.llnl.gov/esg-search/search/?offset=0&limit=0&project=CMIP6&source_id='+m+'&facets=source_id%2Cinstitution_id%2Cactivity_drs&fields=activity_drs&retracted=false&format=application%2Fsolr%2Bjson'
     try:
         response = urllib2.urlopen(esgf_api_mips)
         esgf_mips = json.loads(response.read())

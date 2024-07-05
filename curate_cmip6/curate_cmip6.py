@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 """Check citation database content for required curation issues
+Version: V0.11 2024-07-04: DKRZ solr -> LLNL solr
 Version: V0.10 2020-04-16: tcera1 -> testdb
 Version: V0.9  2020-03-10: No authors for DOI data check added
 Version: V0.8  2019-12-03: DB hardware/software exchange
@@ -489,17 +490,20 @@ for o in sorted(out_details):
                             log.info('Citation completed for DRS: %s' % (xx[index+1]))
 
             # check esgf access links and number of datasets in response
+            # MS 2024-07-04: changed to LLNL due to inaccessibility of DKRZ's Solr and wget access to ESGF index
             elif k=='DOI_ESGF':
                 myv=[]
                 mynum = {'OK':0, 'ERROR':0}
                 for l in v:
                     myesgf = re.split('\$\$',re.split('ESGF_ACCESS_LINK\$',l)[1])[0]
+                    myesgf = re.sub('esgf-data.dkrz.de/search/input4mips-dkrz/','esgf-node.llnl.gov/search/input4mips/',re.sub('esgf-data.dkrz.de/search/cmip6-dkrz/','esgf-node.llnl.gov/search/cmip6/',myesgf))
                     #print myesgf
                     #print 'wget -q -O- \''+re.sub('search/cmip6-dkrz/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf)))+'&fields=master_id\''
                     #sys.exit()
                     ##for ll in os.popen('wget -q -O- \''+re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf))+'\'').readlines():
                     ##for ll in os.popen('wget -q -O- \''+re.sub('search/cmip6-dkrz/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf)))+'&fields=master_id\'').readlines():
-                    for ll in os.popen('wget -q -O- \''+re.sub('search/input4mips-dkrz/','esg-search/search',re.sub('search/cmip6-dkrz/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf))))+'&fields=master_id\'').readlines():
+                    ##for ll in os.popen('wget -q -O- \''+re.sub('search/input4mips-dkrz/','esg-search/search',re.sub('search/cmip6-dkrz/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf))))+'&fields=master_id\'').readlines():
+                    for ll in os.popen('wget -q -O- \''+re.sub('search/input4mips/','esg-search/search',re.sub('search/cmip6/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf))))+'&fields=master_id\'').readlines():
                         #if re.search('result name',ll):
                         #if re.search(r'^(\s+)Total Number of Results:',ll):
                         if re.search(r'numFound',ll):
@@ -515,7 +519,7 @@ for o in sorted(out_details):
                                 mynum['OK'] += 1
                             #sys.exit()
                             break
-                   #sys.exit()
+                    #sys.exit()
 
                 # test result handling
                 if len(myv) > 0:
@@ -528,12 +532,15 @@ for o in sorted(out_details):
 
 
             # check esgf access links and number of datasets in response for incomplete data references
+            # MS 2024-07-04: changed to LLNL due to inaccessibility of DKRZ's Solr and wget access to ESGF index
             elif k=='NODOI_ESGF':
                 myv2=[]
                 mynum2 = {'OK':0, 'ERROR':0}
                 for l in v:
                     myesgf2 = re.split('\$\$',re.split('ESGF_ACCESS_LINK\$',l)[1])[0]
-                    for ll in os.popen('wget -q -O- \''+re.sub('search/cmip6-dkrz/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/input4mips-dkrz/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf2))))+'&fields=master_id\'').readlines():
+                    myesgf2 = re.sub('esgf-data.dkrz.de/search/input4mips-dkrz/','esgf-node.llnl.gov/search/input4mips/',re.sub('esgf-data.dkrz.de/search/cmip6-dkrz/','esgf-node.llnl.gov/search/cmip6/',myesgf2))
+                    ##for ll in os.popen('wget -q -O- \''+re.sub('search/cmip6-dkrz/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/input4mips-dkrz/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf2))))+'&fields=master_id\'').readlines():
+                    for ll in os.popen('wget -q -O- \''+re.sub('search/input4mips/','esg-search/search',re.sub('search/cmip6/','esg-search/search/',re.sub('search/testproject/','esg-search/search/',re.sub('search/esgf-dkrz/','esg-search/search/',myesgf2))))+'&fields=master_id\'').readlines():
                         #if re.search('result name',ll):
                         #if re.search(r'^(\s+)Total Number of Results:',ll):
                         if re.search(r'numFound',ll):

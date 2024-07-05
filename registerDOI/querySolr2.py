@@ -74,20 +74,24 @@ class QuerySolr:
     esgflist = []
 
     # select ESGF node from config list and get list of institutes together with shards from get_shards call
+    #print "get_shards1 input ",api_urls, api_query, api_facets
     try:
       (selected_url, institutions, shards) = self.get_shards(api_urls, api_query, api_facets)
+      #print "get_shards1 ",selected_url, institutions, shards
     # try facet project
     except NoServerFoundError, e:
       try:
         api_query = {}
         (selected_url, institutions, shards) = self.get_shards(api_urls, api_query, api_facets)
+        #print "get_shards2 ",selected_url, institutions, shards
       except NoServerFoundError, e:
         return {}, str(e)
 
     # get list of ESGF-published citation entries from solr request to same node
     solr_url = re.sub('esg-search/search', 'solr', selected_url)
-    #print 'After API call:',solr_url,shards, key, api_query
+    #print 'After API call:',solr_url,shards, ceralist,key, api_query
     esgflist=self.check_ceralist(solr_url, shards, ceralist)
+    #print "check_ceralist ",esgflist
     #published.update(self.check_ceralist(
     #      solr_url, shards, ceralist, gran_drs,api_query))
     if len(esgflist)==0:
@@ -98,7 +102,7 @@ class QuerySolr:
         published[e]='30000000'
     # add publication date from ESGF dataset version to esgflist
     published = self.add_versiondate(published,solr_url,shards)
-    #print published
+    #print "add_versiondate ",published
     #sys.exit()
 
     return (published, '')
@@ -193,13 +197,13 @@ if __name__ == '__main__':
   api_facets = ['institution_id']
   #query = 'mip_era:CMIP6&institution_id:%s'
   #fields = ['instance_id', 'version']
-  nodes = ['https://esgf-data.dkrz.de/esg-search',
-           'https://esgf-node.llnl.gov/esg-search',
+  nodes = ['https://esgf-node.llnl.gov/esg-search',
+           'https://esgf-data.dkrz.de/esg-search',
            'https://esgf-node.ipsl.upmc.fr/esg-search',
            'https://esgf-index1.ceda.ac.uk/esg-search'
           ]
   CMIP6_list = [m for m in mylist if re.search('CMIP6',m)]
-  #print CMIP6_list
+  print CMIP6_list
 
   qs = QuerySolr()
   #gran_drs = [4, 5]

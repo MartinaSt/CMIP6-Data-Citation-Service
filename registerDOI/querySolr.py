@@ -50,7 +50,7 @@ class QuerySolr:
         resp = requests.get(url, params=self.api_params)
         if resp.status_code < 300:
           # MS check for len(content)==0!
-          #print self.api_urls[0],self.api_params
+          #print url,api_urls,self.api_params
           content = resp.json()
 
           shards = content['responseHeader']['params']['shards']
@@ -156,6 +156,10 @@ class QuerySolr:
       except NoServerFoundError, e:
         return {}, {}, str(e)
 
+    #print 'url: ',selected_url
+    #print 'shards: ',shards
+    #print 'institutions: ', institutions
+    #sys.exit()
     # get list of ESGF-published citation entries from solr request to same node
     solr_url = re.sub('esg-search/search', 'solr', selected_url)
     #print 'After API call:',solr_url,shards
@@ -252,8 +256,8 @@ if __name__ == '__main__':
   api_facets = ['institution_id']
   #query = 'mip_era:CMIP6&institution_id:%s'
   #fields = ['instance_id', 'version']
-  nodes = ['https://esgf-data.dkrz.de/esg-search',
-           'https://esgf-node.llnl.gov/esg-search',
+  nodes = ['https://esgf-node.llnl.gov/esg-search',
+           'https://esgf-data.dkrz.de/esg-search',
            'https://esgf-node.ipsl.upmc.fr/esg-search',
            'https://esgf-index1.ceda.ac.uk/esg-search'
           ]
