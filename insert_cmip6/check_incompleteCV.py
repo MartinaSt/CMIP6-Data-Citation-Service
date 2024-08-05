@@ -49,7 +49,7 @@ log.addHandler(console)
 
 # update CMIP6_CVs content from git
 try:
-    dummy = os.popen('cd '+mydir+'/CMIP6_CVs;git pull; cd '+mydir).read()
+    dummy = os.popen('cd '+mydir+'/CMIP6_CVs;git pull https://github.com/WCRP-CMIP/CMIP6_CVs; cd '+mydir).read()
 except:
     log.error('git pull for update of CVs failed -> exit')
     sys.exit()
