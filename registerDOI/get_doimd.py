@@ -2,11 +2,12 @@
 """create DataCite metadata XML: mapping citation db information to DataCite
 using mako templates (http://www.makotemplates.org/)
 Versions: 
-V0.9 2020-04-16: tcera1 -> testdb
-V0.8 2019-12-03: DB hardware/software exchange (stockhause@dkrz.de)
-V0.7 2019-08-14: changes for DC 4.3 (stockhause@dkrz.de)
-V0.6 2019-04-01: changes for DC 4.2 (stockhause@dkrz.de)
-V0.5 2018-03-02: first version with devel-operational (stockhause@dkrz.de)"""
+V0.10 2024-10-14: db change (stockhause@dkrz.de);
+V0.9  2020-04-16: tcera1 -> testdb
+V0.8  2019-12-03: DB hardware/software exchange (stockhause@dkrz.de)
+V0.7  2019-08-14: changes for DC 4.3 (stockhause@dkrz.de)
+V0.6  2019-04-01: changes for DC 4.2 (stockhause@dkrz.de)
+V0.5  2018-03-02: first version with devel-operational (stockhause@dkrz.de)"""
 
 import sys,os,os.path,re,getopt
 import urllib2,ssl
@@ -59,12 +60,16 @@ class GetDoi:
         # configure database and testflag
         self.mydir     = mydir
         self.db        = db
+        self.db2       = 'cera-db.dkrz.de'
         self.fileflag  = ''
         # MS 2019-12-03: testdb -> tcera1
         # MS 2020-04-16: tcera1 -> testdb
+        # MS 2024-10-14: testdb -> tcera
         #if self.db == 'tcera1':
-        if self.db == 'testdb':
+        #if self.db == 'testdb':
+        if self.db == 'tcera':
             self.fileflag = 'test'
+            self.db2='cera-testdb.dkrz.de'
 
         # configure DataCite schema version
         self.schemeversion = 4 # 3
@@ -98,7 +103,8 @@ class GetDoi:
         #self.version   = 'Version 0.6: changes for DC 4.2 (2019-04-01) by M.Stockhause'
         #self.version   = 'Version 0.7: changes for DC 4.3 (2019-08-14) by M.Stockhause'
         #self.version   = 'Version 0.8: DB hardware/software exchange (2019-12-03) by M.Stockhause'
-        self.version   = 'Version 0.9: Test DB changed from tcera1 back to testdb ( 2020-04-16) by M.Stockhause'
+        #self.version   = 'Version 0.9: Test DB changed from tcera1 back to testdb ( 2020-04-16) by M.Stockhause'
+        self.version   = 'Version 0.10: DB change (stockhause@dkrz.de) (2024-10-14) by M.Stockhause'
         self.list_ri   = []
         self.dversion   = version #'1'
         self.dsg_name    = dsg_name
@@ -158,8 +164,10 @@ class GetDoi:
         fdb.close()
         try:
             # MS 2019-12-03: oda-scan.dkrz.de -> delphi7-scan.dkrz.de
+            # MS 2024-10-14: testdb -> tcera; delphi7-scan.dkrz.de -> cera-db.dkrz.de/cera-testdb.dkrz.de
             #sdbfile2 =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = oda-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+self.db+' ) ))'
-            sdbfile2 =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+self.db+' ) ))'
+            #sdbfile2 =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+self.db+' ) ))'
+            sdbfile2 =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = '+self.db2+' ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+self.db+' ) ))'
         except:
             raise IOError, "\nCannot connect to DB=\'%s\'. Check password in file .meta_select\n" % cuser
 

@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
 """ Insert/Update evolving citation entries 
-Version: V0.2 2019-12-03: DB hardware/software exchange,
+Version: V0.3 2024-10-14: db change (stockhause@dkrz.de)
+         V0.2 2019-12-03: DB hardware/software exchange,
          V0.1 2018-06-05, stockhause@dkrz.de"""
 
 # Usage: ./insert_citation.py [<test>]
@@ -51,7 +52,7 @@ def errorHandling(ecode,emessage,estring):
     conn.close()
     sys.exit()
 
-def mergeCera(db,cuser,sqls,testflag):
+def mergeCera(db,db2,cuser,sqls,testflag):
     """connect as cuser and execute sql statements"""
 
     #print 'Connect to CERA as %s...' % cuser
@@ -59,8 +60,10 @@ def mergeCera(db,cuser,sqls,testflag):
     cpw    = open(fdb,'r').read().strip()
     try:
         # MS 2019-12-03: oda-scan.dkrz.de -> delphi7-scan.dkrz.de
+        # MS 2024-10-14: delphi7-scan.dkrz.de -> cera-db.dkrz.de or cera-testdb.dkrz.de
         #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = oda-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
-        sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+        #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+        sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = '+db2+' ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
         conn = cx_Oracle.connect(sdbfile)
         cur = conn.cursor()
     except cx_Oracle.DatabaseError as e:
@@ -89,8 +92,10 @@ def mergeCera(db,cuser,sqls,testflag):
 mydate = os.popen('date +%F').read().strip()
 
 # MS 2019-12-03: pcera.dkrz.de -> pcera
+# MS 2024-10-14: delphi7-scan.dkrz.de -> cera-db.dkrz.de
 #db='pcera.dkrz.de'
 db='pcera'
+db2='cera-db.dkrz.de'
 fileflag=''
 try:
     testflag = sys.argv[1]
@@ -123,8 +128,8 @@ for l in open(mydir+'/insert_citation.sql','r').readlines():
         cera[key]=value
 
 # insert into cera2_upd
-mergeCera(db,'cera2_upd',cera_upd,testflag)
+mergeCera(db,db2,'cera2_upd',cera_upd,testflag)
 
 # update cera2
-mergeCera(db,'cera2',cera,testflag)
+mergeCera(db,db2,'cera2',cera,testflag)
 

@@ -45,6 +45,7 @@ class QuerySolr:
     # localhost:8983/solr/datasets,localhost:8982/solr/datasets,localhost:8986/solr/datasets,localhost:8987/solr/datasets,localhost:8988/solr/datasets,localhost:8989/solr/datasets,localhost:8990/solr/datasets,localhost:8993/solr/datasets,localhost:8994/solr/datasets,localhost:8995/solr/datasets,localhost:8997/solr/datasets,localhost:8998
     for url in api_urls:
       try:
+        #print url,self.api_params
         resp = requests.get(url, params=self.api_params)
         if resp.status_code < 300:
           # MS check for len(content)==0!
@@ -77,7 +78,7 @@ class QuerySolr:
     #print "get_shards1 input ",api_urls, api_query, api_facets
     try:
       (selected_url, institutions, shards) = self.get_shards(api_urls, api_query, api_facets)
-      #print "get_shards1 ",selected_url, institutions, shards
+      #print "get_shards1 ",selected_url, shards
     # try facet project
     except NoServerFoundError, e:
       try:
@@ -89,7 +90,7 @@ class QuerySolr:
 
     # get list of ESGF-published citation entries from solr request to same node
     solr_url = re.sub('esg-search/search', 'solr', selected_url)
-    #print 'After API call:',solr_url,shards, ceralist,key, api_query
+    #print 'After API call:',solr_url,shards,key,api_query
     esgflist=self.check_ceralist(solr_url, shards, ceralist)
     #print "check_ceralist ",esgflist
     #published.update(self.check_ceralist(
@@ -147,7 +148,7 @@ class QuerySolr:
     # key could be mip_era or project 
     for c in ceralist:
       url = solr_urls+"/"+self.solr_core + "/select"
-      #print 'master_id:',c
+      #print 'url,master_id:',url,c
       if re.search('input4MIPs',c):
         subfacet='source_id'
       else:

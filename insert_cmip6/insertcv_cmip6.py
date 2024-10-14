@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 """ insert/update drs_entries from CMIP6_CV at https://github.com/WCRP-CMIP/CMIP6_CVs into cmip6_cite_test
+Version: V0.8 2024-10-14: db change (stockhause@dkrz.de)
 Version: V0.7 2020-04-16: tcera1 -> testdb
 Version: V0.6 2019-12-03: DB hardware/software exchange
 Version: V0.5 2018-11-16: support for cx_Oracle 7
@@ -240,8 +241,10 @@ spec_inst=sys.argv[2]
 modelflag=int(sys.argv[3])
 
 # MS 2019-12-03: pcera.dkrz.de -> pcera
+# MS 2024-10-14: testdb -> tcera; delphi7-scan.dkrz.de -> cera-db.dkrz.de/cera-testdb.dkrz.de
 #db='pcera.dkrz.de'
 db='pcera'
+db2='cera-db.dkrz.de'
 fileflag=''
 try:
     testflag = sys.argv[4]
@@ -249,7 +252,9 @@ try:
     if testflag == 'testdb' or testflag == 'testdbtest':
         # MS 2019-12-03: testdb -> tcera1
         # MS 2020-04-16: tcera1 -> testdb
-        db='testdb'
+        db='tcera'
+        db2='cera-testdb.dkrz.de'
+        #db='testdb'
         #db='tcera1'
         fileflag='test'
     if testflag == 'testdbtest':
@@ -554,8 +559,10 @@ fdb=os.path.abspath(os.path.relpath(mydir+'/../.cmip6_cite_test'+fileflag))
 cpw    = open(fdb,'r').read().strip()
 try:
     # MS 2019-12-03: oda-scan.dkrz.de -> delphi7-scan.dkrz.de
+    # MS 2024-10-14: delphi7-scan.dkrz.de -> cera-db.dkrz.de or cera-testdb.dkrz.de
     #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = oda-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
-    sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+    #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+    sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = '+db2+' ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
     conn = cx_Oracle.connect(sdbfile)
     cur = conn.cursor()
 except cx_Oracle.DatabaseError as e:

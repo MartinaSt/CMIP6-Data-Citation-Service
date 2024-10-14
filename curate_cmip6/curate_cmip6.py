@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 """Check citation database content for required curation issues
+Version: V0.12 2024-10-14: db change (stockhause@dkrz.de)
 Version: V0.11 2024-07-04: DKRZ solr -> LLNL solr
 Version: V0.10 2020-04-16: tcera1 -> testdb
 Version: V0.9  2020-03-10: No authors for DOI data check added
@@ -327,8 +328,10 @@ def upd_listconnect(cur,runids,out_curated):
 mydate = os.popen('date +%F').read().strip()
 
 # MS 2019-12-03: pcera.dkrz.de -> pcera
+# MS 2024-10-14: testdb -> tcera; delphi7-scan.dkrz.de -> cera-db.dkrz.de/cera-testdb.dkrz.de
 #db='pcera.dkrz.de'
 db='pcera'
+db2='cera-db.dkrz.de'
 fileflag=''
 try:
     testflag = sys.argv[1]
@@ -336,8 +339,10 @@ try:
     if testflag == 'testdb' or testflag == 'testdbtest':
         # MS 2019-12-03: testdb -> tcera1
         # MS 2020-04-16: tcera1 -> testdb
-        db='testdb'
+        db='tcera'
+        db2='cera-testdb.dkrz.de'
         #db='tcera1'
+        #db='testdb'
         fileflag='test'
     if testflag == 'testdbtest':
         testflag='test'
@@ -368,9 +373,10 @@ fdb=os.path.abspath(os.path.relpath(mydir+'/../.cmip6_cite_test'+fileflag))
 cpw    = open(fdb,'r').read().strip()
 try:
     # MS 2019-12-03: oda-scan.dkrz.de -> delphi7-scan.dkrz.de
+    # MS 2024-10-14: delphi7-scan.dkrz.de -> cera-db.dkrz.de or cera-testdb.dkrz.de
     #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = oda-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
-    sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
- 
+    #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+    sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = '+db2+' ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
 except:
     log.error("Cannot connect to DB=\'%s\'. Check password" % cuser)
     #raise IOError, "\nCannot connect to DB=\'%s\'. Check password\n" % cuser

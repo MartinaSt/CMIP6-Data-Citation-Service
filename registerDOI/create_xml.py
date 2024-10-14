@@ -1,12 +1,13 @@
 #! /usr/bin/env python
 """ create updated DataCite metadata files and transfer to oai server
-Version: V0.9 2023-11-02: rsync change of target
-         V0.8 2021-02-15: rsync changed
-         V0.7 2020-04-16: tcera1 -> testdb
-         V0.6 2020-01-06: rsync k204082 -> citeuser (stockhause@dkrz.de),
-         V0.5 2019-12-03: DB hardware/software exchange (stockhause@dkrz.de),
-         V0.4 2018-03-02, devel-operational set-up (stockhause@dkrz.de),
-         V0.3 2017-05-08, stockhause@dkrz.de"""
+Version: V0.10 2024-10-14: db change (stockhause@dkrz.de);
+         V0.9  2023-11-02: rsync change of target
+         V0.8  2021-02-15: rsync changed
+         V0.7  2020-04-16: tcera1 -> testdb
+         V0.6  2020-01-06: rsync k204082 -> citeuser (stockhause@dkrz.de),
+         V0.5  2019-12-03: DB hardware/software exchange (stockhause@dkrz.de),
+         V0.4  2018-03-02, devel-operational set-up (stockhause@dkrz.de),
+         V0.3  2017-05-08, stockhause@dkrz.de"""
 
 # Usage: ./create_xml.py [<test|testdb|testdbtest>] 
 
@@ -163,8 +164,10 @@ mydate = fdate.read().strip()
 fdate.close()
 
 # MS 2019-12-03: pcera.dkrz.de -> pcera
+# MS 2024-10-14: testdb -> tcera; delphi7-scan.dkrz.de -> cera-db.dkrz.de/cera-testdb.dkrz.de
 #db='pcera.dkrz.de'
 db='pcera'
+db2='cera-db.dkrz.de'
 fileflag=''
 try:
     testflag = sys.argv[1]
@@ -172,7 +175,9 @@ try:
     if testflag == 'testdb' or testflag == 'testdbtest':
         # MS 2019-12-03: testdb -> tcera1
         # MS 2020-04-16: tcera1 -> testdb
-        db='testdb'
+        db='tcera'
+        db2='cera-testdb.dkrz.de'
+        #db='testdb'
         #db='tcera1'
         fileflag='test'
     if testflag == 'testdbtest':
@@ -221,8 +226,10 @@ cpw = fdb.read().strip()
 fdb.close()
 try:
     # MS 2019-12-03: oda-scan.dkrz.de -> delphi7-scan.dkrz.de
+    # MS 2024-10-14: testdb -> tcera; delphi7-scan.dkrz.de -> cera-db.dkrz.de/cera-testdb.dkrz.de
     #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = oda-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
-    sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+    #sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = delphi7-scan.dkrz.de ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
+    sdbfile =  cuser+'/'+cpw+'@'+'( DESCRIPTION = ( ADDRESS_LIST = ( ADDRESS = ( PROTOCOL = TCP ) ( HOST = '+db2+' ) ( PORT = 1521 ) ) ) ( CONNECT_DATA = ( SERVER = DEDICATED ) ( SERVICE_NAME = '+db+' ) ))'
     conn = cx_Oracle.connect(sdbfile)
     cur = conn.cursor()
 except cx_Oracle.DatabaseError as e:
