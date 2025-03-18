@@ -321,9 +321,12 @@ for root, dirs, files in os.walk(".", topdown=False):
         else:
             print 'SKIP %s' % f
 
-# MS: Hacking PCMDI-test inserts
+# MS: Hacking missing MIPs in source_id inserts
 #dum_models['source_id']['PCMDI-test-1-0']['activity_participation']=[u'CMIP',u'C4MIP']
-#print dum_models['source_id']['PCMDI-test-1-0']
+dum_models['source_id']['NorESM2-LM']['activity_participation'].append(u'GeoMIP')
+dum_models['source_id']['EC-Earth3-HR']['activity_participation'].append(u'ScenarioMIP')
+#print dum_models['source_id']['NorESM2-LM']
+#print dum_models['source_id']['EC-Earth3-HR']
 #sys.exit()
 
 # merge institutes/models
