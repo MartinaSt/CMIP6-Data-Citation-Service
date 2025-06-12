@@ -513,9 +513,13 @@ for o in sorted(out_details):
                         #if re.search('result name',ll):
                         #if re.search(r'^(\s+)Total Number of Results:',ll):
                         if re.search(r'numFound',ll):
+                            #print ll.strip()
+                            #print re.split('numFound":',ll.strip())[1]
+                            #print re.split(',',re.split('numFound":',ll.strip())[1])[0]
                             #mynum=re.split('numFound="',re.split('" start',ll)[0])[1]
                             #mnum=re.split(':',ll)[1].strip()
-                            mnum=int(re.split('"',re.split('numFound="',ll.strip())[1])[0])
+                            #mnum=int(re.split('"',re.split('numFound="',ll.strip())[1])[0])
+                            mnum=int(re.split(',',re.split('numFound":',ll.strip())[1])[0])
                             if int(mnum) == 0:
                                 log.error('No data in ESGF - %s' % myesgf)
                                 myv.append('No data in ESGF - %s' % myesgf)
@@ -552,7 +556,8 @@ for o in sorted(out_details):
                         if re.search(r'numFound',ll):
                             #mynum=re.split('numFound="',re.split('" start',ll)[0])[1]
                             #mnum=re.split(':',ll)[1].strip()
-                            mnum2=int(re.split('"',re.split('numFound="',ll.strip())[1])[0])
+                            #mnum2=int(re.split('"',re.split('numFound="',ll.strip())[1])[0])
+                            mnum2=int(re.split(',',re.split('numFound":',ll.strip())[1])[0])
                             if int(mnum2)>0:
                                 #log.error('Data in ESGF without citation - %s' % myesgf2)
                                 myv2.append('Data in ESGF without citation - %s' % myesgf2)
@@ -588,7 +593,8 @@ else:
 msg['Subject'] = 'cmip6_curation (%s) on %s' % (db,os.popen('date +%Y-%m-%d').read().strip())
 sender = 'k204082@dkrz.de'
 ##recipients = ['stockhause@dkrz.de','lammert@dkrz.de']
-recipients = ['stockhause@dkrz.de','cmip-ipo@esa.int']
+##recipients = ['stockhause@dkrz.de','cmip-ipo@esa.int']
+recipients = ['stockhause@dkrz.de']
 msg['From'] = sender
 msg['To'] = ', '.join(recipients)
 s = smtplib.SMTP('localhost')
