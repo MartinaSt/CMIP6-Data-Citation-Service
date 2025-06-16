@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.15673534.svg)](https://doi.org/10.5281/zenodo.15673534)
+
 # CMIP6 Data Citation Service
 
 Software for CMIP6 data citation service:

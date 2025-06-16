@@ -6,6 +6,6 @@ authors:
   orcid: "http://orcid.org/0000-0001-6636-4972"
 title: "CMIP6 Data Citation Service software"
 version: 1.0
-doi: 10.5281/zenodo.xxxx
+doi: 10.5281/zenodo.15673534
 date-released: 2023-10-02
 url: "https://github.com/MartinaSt/CMIP6-Data-Citation-Service"
